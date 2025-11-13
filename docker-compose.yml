@@ -1,0 +1,89 @@
+version: '3.8'
+
+services:
+  # MongoDB Database
+  mongodb:
+    image: mongo:7
+    container_name: goblog_mongodb
+    environment:
+      - MONGO_INITDB_DATABASE=goblog
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+      - ./scripts/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    networks:
+      - goblog_network
+
+  # Auth Service
+  auth-service:
+    build:
+      context: .
+      dockerfile: services/auth/Dockerfile
+    container_name: goblog_auth
+    env_file:
+      - .env
+    environment:
+      # Override specific values for container networking
+      - HOST=0.0.0.0
+      - AUTH_SERVICE_URL=auth-service:50051
+      - USER_SERVICE_URL=user-service:50052
+    ports:
+      - "${AUTH_SERVICE_PORT:-50051}:${AUTH_SERVICE_PORT:-50051}"
+    depends_on:
+      - mongodb
+    networks:
+      - goblog_network
+    restart: unless-stopped
+
+  # User Service
+  user-service:
+    build:
+      context: .
+      dockerfile: services/user/Dockerfile
+    container_name: goblog_user
+    env_file:
+      - .env
+    environment:
+      # Override specific values for container networking
+      - HOST=0.0.0.0
+      - AUTH_SERVICE_URL=auth-service:50051
+      - USER_SERVICE_URL=user-service:50052
+    ports:
+      - "${USER_SERVICE_PORT:-50052}:${USER_SERVICE_PORT:-50052}"
+    depends_on:
+      - mongodb
+      - auth-service
+    networks:
+      - goblog_network
+    restart: unless-stopped
+
+  # Gateway Service
+  gateway-service:
+    build:
+      context: .
+      dockerfile: gateway/Dockerfile
+    container_name: goblog_gateway
+    env_file:
+      - .env
+    environment:
+      # Override specific values for container networking
+      - HOST=0.0.0.0
+      - AUTH_SERVICE_URL=auth-service:50051
+      - USER_SERVICE_URL=user-service:50052
+    ports:
+      - "${GATEWAY_PORT:-8080}:${GATEWAY_PORT:-8080}"
+    depends_on:
+      - auth-service
+      - user-service
+    networks:
+      - goblog_network
+    restart: unless-stopped
+
+volumes:
+  mongodb_data:
+    driver: local
+
+networks:
+  goblog_network:
+    driver: bridge
