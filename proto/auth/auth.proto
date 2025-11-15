@@ -1,0 +1,159 @@
+syntax = "proto3";
+
+package auth;
+
+option go_package = "github.com/Nutan-Kum12/goblog/proto/auth";
+
+// User registration request
+message RegisterRequest {
+    string email = 1;
+    string password = 2;
+}
+
+message RegisterResponse {
+    bool success = 1;
+    string message = 2;
+    string user_id = 3;
+}
+
+// OTP verification request
+message VerifyOTPRequest {
+    string user_id = 1;
+    string otp = 2;
+}
+
+message VerifyOTPResponse {
+    bool success = 1;
+    string message = 2;
+    string access_token = 3;
+    string refresh_token = 4;
+}
+
+// Resend OTP request
+message ResendOTPRequest {
+    string user_id = 1;
+}
+
+message ResendOTPResponse {
+    bool success = 1;
+    string message = 2;
+}
+
+// User login request
+message LoginRequest {
+    string email = 1;
+    string password = 2;
+}
+
+message LoginResponse {
+    bool success = 1;
+    string message = 2;
+    string user_id = 3;
+    string access_token = 4;
+    string refresh_token = 5;
+}
+
+// Change password request
+message ChangePasswordRequest {
+    string user_id = 1;
+    string current_password = 2;
+    string new_password = 3;
+}
+
+message ChangePasswordResponse {
+    bool success = 1;
+    string message = 2;
+}
+
+// Forgot password request
+message ForgotPasswordRequest {
+    string email = 1;
+}
+
+message ForgotPasswordResponse {
+    bool success = 1;
+    string message = 2;
+    string reset_token = 3;
+}
+
+// Reset password request
+message ResetPasswordRequest {
+    string email = 1;
+    string reset_token = 2;
+    string new_password = 3;
+}
+
+message ResetPasswordResponse {
+    bool success = 1;
+    string message = 2;
+}
+
+// Refresh token request
+message RefreshTokenRequest {
+    string refresh_token = 1;
+}
+
+message RefreshTokenResponse {
+    bool success = 1;
+    string message = 2;
+    string access_token = 3;
+    string refresh_token = 4;
+}
+
+// Validate token request
+message ValidateTokenRequest {
+    string access_token = 1;
+}
+
+message ValidateTokenResponse {
+    bool valid = 1;
+    string user_id = 2;
+    string message = 3;
+}
+
+// Logout request
+message LogoutRequest {
+    string user_id = 1;
+    string refresh_token = 2;
+}
+
+message LogoutResponse {
+    bool success = 1;
+    string message = 2;
+}
+
+// Create user request (internal, called during registration)
+message CreateUserRequest {
+    string email = 1;
+    string password_hash = 2;
+}
+
+message CreateUserResponse {
+    bool success = 1;
+    string message = 2;
+    string user_id = 3;
+}
+
+// Auth service definition - focused only on authentication
+service AuthService {
+    // User registration and verification
+    rpc Register(RegisterRequest) returns (RegisterResponse);
+    rpc VerifyOTP(VerifyOTPRequest) returns (VerifyOTPResponse);
+    rpc ResendOTP(ResendOTPRequest) returns (ResendOTPResponse);
+    
+    // User authentication
+    rpc Login(LoginRequest) returns (LoginResponse);
+    rpc Logout(LogoutRequest) returns (LogoutResponse);
+    
+    // Password management
+    rpc ChangePassword(ChangePasswordRequest) returns (ChangePasswordResponse);
+    rpc ForgotPassword(ForgotPasswordRequest) returns (ForgotPasswordResponse);
+    rpc ResetPassword(ResetPasswordRequest) returns (ResetPasswordResponse);
+    
+    // Token management
+    rpc RefreshToken(RefreshTokenRequest) returns (RefreshTokenResponse);
+    rpc ValidateToken(ValidateTokenRequest) returns (ValidateTokenResponse);
+    
+    // Internal methods
+    rpc CreateUser(CreateUserRequest) returns (CreateUserResponse);
+}
