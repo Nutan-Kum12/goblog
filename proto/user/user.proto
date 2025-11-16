@@ -1,0 +1,163 @@
+syntax = "proto3";
+
+package user;
+
+option go_package = "github.com/Nutan-Kum12/goblog/proto/user";
+
+import "google/protobuf/timestamp.proto";
+
+// Enums for user interests
+enum InterestCategory {
+    INTEREST_UNSPECIFIED = 0;
+    SPORTS = 1;
+    ENTERTAINMENT = 2;
+    TECHNOLOGY = 3;
+    TRAVEL = 4;
+    FOOD = 5;
+    HEALTH = 6;
+    FINANCE = 7;
+    EDUCATION = 8;
+    LIFESTYLE = 9;
+    BUSINESS = 10;
+    SCIENCE = 11;
+    POLITICS = 12;
+    GAMING = 13;
+    MUSIC = 14;
+    MOVIES = 15;
+    BOOKS = 16;
+    ART = 17;
+    PHOTOGRAPHY = 18;
+}
+
+// User profile message
+message UserProfile {
+    string user_id = 1;
+    string email = 2;
+    string first_name = 3;
+    string last_name = 4;
+    string phone_number = 5;
+    google.protobuf.Timestamp date_of_birth = 6;
+    repeated InterestCategory interests = 7;
+    bool is_verified = 8;
+    bool is_active = 9;
+    google.protobuf.Timestamp created_at = 10;
+    google.protobuf.Timestamp updated_at = 11;
+}
+
+// User profile completion request
+message CompleteProfileRequest {
+    string user_id = 1;
+    string first_name = 2;
+    string last_name = 3;
+    string phone_number = 4;
+    google.protobuf.Timestamp date_of_birth = 5;
+    repeated InterestCategory interests = 6;
+}
+
+message CompleteProfileResponse {
+    bool success = 1;
+    string message = 2;
+}
+
+// Get user profile request
+message GetUserProfileRequest {
+    string user_id = 1;
+}
+
+message GetUserProfileResponse {
+    bool success = 1;
+    string message = 2;
+    UserProfile user_profile = 3;
+}
+
+// Update user profile request
+message UpdateUserProfileRequest {
+    string user_id = 1;
+    string first_name = 2;
+    string last_name = 3;
+    string phone_number = 4;
+    google.protobuf.Timestamp date_of_birth = 5;
+    repeated InterestCategory interests = 6;
+}
+
+message UpdateUserProfileResponse {
+    bool success = 1;
+    string message = 2;
+}
+
+// Get user by email request (internal service communication)
+message GetUserByEmailRequest {
+    string email = 1;
+}
+
+message GetUserByEmailResponse {
+    bool success = 1;
+    string message = 2;
+    UserProfile user_profile = 3;
+}
+
+// Get user by ID request
+message GetUserByIdRequest {
+    string user_id = 1;
+}
+
+message GetUserByIdResponse {
+    bool success = 1;
+    string message = 2;
+    UserProfile user_profile = 3;
+}
+
+// Update user verification status (internal)
+message UpdateVerificationStatusRequest {
+    string user_id = 1;
+    bool is_verified = 2;
+    string email = 3; // Email to set when creating profile during verification
+}
+
+message UpdateVerificationStatusResponse {
+    bool success = 1;
+    string message = 2;
+}
+
+// Delete user request
+message DeleteUserRequest {
+    string user_id = 1;
+}
+
+message DeleteUserResponse {
+    bool success = 1;
+    string message = 2;
+}
+
+// List users request (for admin)
+message ListUsersRequest {
+    int32 page = 1;
+    int32 limit = 2;
+    string search = 3;
+}
+
+message ListUsersResponse {
+    bool success = 1;
+    string message = 2;
+    repeated UserProfile users = 3;
+    int32 total_count = 4;
+    int32 page = 5;
+    int32 limit = 6;
+}
+
+// User service definition
+service UserService {
+    // Profile management
+    rpc CompleteProfile(CompleteProfileRequest) returns (CompleteProfileResponse);
+    rpc GetUserProfile(GetUserProfileRequest) returns (GetUserProfileResponse);
+    rpc UpdateUserProfile(UpdateUserProfileRequest) returns (UpdateUserProfileResponse);
+    rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse);
+    
+    // Internal service methods (called by auth service)
+    rpc GetUserByEmail(GetUserByEmailRequest) returns (GetUserByEmailResponse);
+    rpc GetUserById(GetUserByIdRequest) returns (GetUserByIdResponse);
+    rpc UpdateVerificationStatus(UpdateVerificationStatusRequest) returns (UpdateVerificationStatusResponse);
+    
+    // Admin methods
+    rpc ListUsers(ListUsersRequest) returns (ListUsersResponse);
+}
