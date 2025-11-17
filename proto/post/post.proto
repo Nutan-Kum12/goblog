@@ -1,0 +1,215 @@
+syntax = "proto3";
+
+package post;
+option go_package = "github.com/Nutan-Kum12/goblog/proto/post";
+
+import "google/protobuf/timestamp.proto";
+
+// ---------------------------
+// Post Service Definition
+// ---------------------------
+service PostService {
+    rpc CreatePost(CreatePostRequest) returns (CreatePostResponse);
+    rpc GetPost(GetPostRequest) returns (GetPostResponse);
+    rpc UpdatePost(UpdatePostRequest) returns (UpdatePostResponse);
+    rpc DeletePost(DeletePostRequest) returns (DeletePostResponse);
+    rpc ListPosts(ListPostsRequest) returns (ListPostsResponse);
+
+    // Likes
+    rpc LikePost(LikePostRequest) returns (LikePostResponse);
+    rpc UnlikePost(UnlikePostRequest) returns (UnlikePostResponse);
+    rpc GetPostLikes(GetPostLikesRequest) returns (GetPostLikesResponse);
+
+    // Comments
+    rpc CommentOnPost(CommentOnPostRequest) returns (CommentOnPostResponse);
+    rpc GetComments(GetCommentsRequest) returns (GetCommentsResponse);
+    rpc GetCommentsCount(GetCommentsCountRequest) returns (GetCommentsCountResponse);
+
+    // Feed
+    rpc GetFeed(GetFeedRequest) returns (GetFeedResponse);
+}
+
+// ---------------------------
+// Models
+// ---------------------------
+message Post {
+    string post_id = 1;
+    string user_id = 2;
+    string title = 3;
+    string content = 4;
+    repeated string tags = 5;
+    bool is_published = 6;
+    google.protobuf.Timestamp created_at = 7;
+    google.protobuf.Timestamp updated_at = 8;
+    int32 like_count = 9;
+    int32 comment_count = 10;
+    repeated string media_urls = 11;
+}
+
+message Comment {
+    string comment_id = 1;
+    string post_id = 2;
+    string user_id = 3;
+    string content = 4;
+    google.protobuf.Timestamp created_at = 5;
+}
+
+// ---------------------------
+// Create Post
+// ---------------------------
+message CreatePostRequest {
+    string user_id = 1;
+    string title = 2;
+    string content = 3;
+    repeated string tags = 4;
+    repeated string media_urls = 5;
+}
+
+message CreatePostResponse {
+    bool success = 1;
+    string message = 2;
+    string post_id = 3;
+}
+
+// ---------------------------
+// Get Post
+// ---------------------------
+message GetPostRequest {
+    string post_id = 1;
+}
+
+message GetPostResponse {
+    bool success = 1;
+    string message = 2;
+    Post post = 3;
+}
+
+// ---------------------------
+// Update Post
+// ---------------------------
+message UpdatePostRequest {
+    string post_id = 1;
+    string title = 2;
+    string content = 3;
+    repeated string tags = 4;
+    bool is_published = 5;
+    google.protobuf.Timestamp updated_at = 6;
+    repeated string media_urls = 7;
+}
+
+message UpdatePostResponse {
+    bool success = 1;
+    string message = 2;
+}
+
+// ---------------------------
+// Delete Post
+// ---------------------------
+message DeletePostRequest {
+    string post_id = 1;
+}
+
+message DeletePostResponse {
+    bool success = 1;
+    string message = 2;
+}
+
+// ---------------------------
+// List Posts
+// ---------------------------
+message ListPostsRequest {
+    string user_id = 1;
+    int32 page_number = 2;
+    int32 page_size = 3;
+}
+
+message ListPostsResponse {
+    bool success = 1;
+    string message = 2;
+    repeated Post posts = 3;
+    int32 total_count = 4;
+}
+
+// ---------------------------
+// Likes
+// ---------------------------
+message LikePostRequest {
+    string post_id = 1;
+    string user_id = 2;
+}
+
+message LikePostResponse {
+    bool success = 1;
+    string message = 2;
+}
+
+message UnlikePostRequest {
+    string post_id = 1;
+    string user_id = 2;
+}
+
+message UnlikePostResponse {
+    bool success = 1;
+    string message = 2;
+}
+
+message GetPostLikesRequest {
+    string post_id = 1;
+}
+
+message GetPostLikesResponse {
+    bool success = 1;
+    string message = 2;
+    repeated string user_ids = 3;
+    int32 like_count = 4;
+}
+
+// ---------------------------
+// Comments
+// ---------------------------
+message CommentOnPostRequest {
+    string post_id = 1;
+    string user_id = 2;
+    string content = 3;
+}
+
+message CommentOnPostResponse {
+    bool success = 1;
+    string message = 2;
+    string comment_id = 3;
+}
+
+message GetCommentsRequest {
+    string post_id = 1;
+}
+
+message GetCommentsResponse {
+    bool success = 1;
+    string message = 2;
+    repeated Comment comments = 3;
+}
+
+message GetCommentsCountRequest {
+    string post_id = 1;
+}
+
+message GetCommentsCountResponse {
+    bool success = 1;
+    string message = 2;
+    int32 count = 3;
+}
+
+// ---------------------------
+// Feed
+// ---------------------------
+message GetFeedRequest {
+    string user_id = 1;
+    int32 page_number = 2;
+    int32 page_size = 3;
+}
+
+message GetFeedResponse {
+    bool success = 1;
+    string message = 2;
+    repeated Post posts = 3;
+}

@@ -839,6 +839,7 @@ type UpdateVerificationStatusRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	IsVerified    bool                   `protobuf:"varint,2,opt,name=is_verified,json=isVerified,proto3" json:"is_verified,omitempty"`
+	Email         string                 `protobuf:"bytes,3,opt,name=email,proto3" json:"email,omitempty"` // Email to set when creating profile during verification
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -885,6 +886,13 @@ func (x *UpdateVerificationStatusRequest) GetIsVerified() bool {
 		return x.IsVerified
 	}
 	return false
+}
+
+func (x *UpdateVerificationStatusRequest) GetEmail() string {
+	if x != nil {
+		return x.Email
+	}
+	return ""
 }
 
 type UpdateVerificationStatusResponse struct {
@@ -1242,11 +1250,12 @@ const file_proto_user_user_proto_rawDesc = "" +
 	"\x13GetUserByIdResponse\x12\x18\n" +
 	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x18\n" +
 	"\amessage\x18\x02 \x01(\tR\amessage\x124\n" +
-	"\fuser_profile\x18\x03 \x01(\v2\x11.user.UserProfileR\vuserProfile\"[\n" +
+	"\fuser_profile\x18\x03 \x01(\v2\x11.user.UserProfileR\vuserProfile\"q\n" +
 	"\x1fUpdateVerificationStatusRequest\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x1f\n" +
 	"\vis_verified\x18\x02 \x01(\bR\n" +
-	"isVerified\"V\n" +
+	"isVerified\x12\x14\n" +
+	"\x05email\x18\x03 \x01(\tR\x05email\"V\n" +
 	" UpdateVerificationStatusResponse\x12\x18\n" +
 	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x18\n" +
 	"\amessage\x18\x02 \x01(\tR\amessage\",\n" +

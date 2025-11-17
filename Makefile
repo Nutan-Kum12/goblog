@@ -11,11 +11,13 @@ GOMOD=$(GOCMD) mod
 # Binary names
 AUTH_BINARY=auth
 USER_BINARY=user
+POST_BINARY=post
 GATEWAY_BINARY=gateway
 
 # Directories
 AUTH_DIR=./services/auth
 USER_DIR=./services/user
+POST_DIR=./services/post
 GATEWAY_DIR=./gateway
 PROTO_DIR=./proto
 
@@ -71,10 +73,14 @@ gen:
 	$(PROTOC) --go_out=. --go_opt=paths=source_relative \
 		--go-grpc_out=. --go-grpc_opt=paths=source_relative \
 		$(PROTO_DIR)/user/user.proto
-	@echo "Protobuf generation completed!"
+	@echo "Generating post protobuf..."
+	$(PROTOC) --go_out=. --go_opt=paths=source_relative \
+		--go-grpc_out=. --go-grpc_opt=paths=source_relative \
+		$(PROTO_DIR)/post/post.proto	
+	@echo "Protobuf generation completed!"		
 
 # Build all services
-build: build-auth build-user build-gateway
+build: build-auth build-user build-post build-gateway
 
 build-auth:
 	@echo "Building auth service..."
@@ -83,6 +89,10 @@ build-auth:
 build-user:
 	@echo "Building user service..."
 	$(GOBUILD) -o $(USER_BINARY) $(USER_DIR)
+
+build-post:
+	@echo "Building post service..."
+	$(GOBUILD) -o $(POST_BINARY) $(POST_DIR)
 
 build-gateway:
 	@echo "Building gateway service..."
@@ -97,8 +107,8 @@ test:
 clean:
 	@echo "Cleaning..."
 	$(GOCLEAN)
-	rm -f $(AUTH_BINARY) $(USER_BINARY) $(GATEWAY_BINARY)
-	rm -f $(AUTH_BINARY).exe $(USER_BINARY).exe $(GATEWAY_BINARY).exe
+	rm -f $(AUTH_BINARY) $(USER_BINARY) $(POST_BINARY) $(GATEWAY_BINARY)
+	rm -f $(AUTH_BINARY).exe $(USER_BINARY).exe $(POST_BINARY).exe $(GATEWAY_BINARY).exe
 
 # Run individual services
 run-auth: build-auth
@@ -108,6 +118,10 @@ run-auth: build-auth
 run-user: build-user
 	@echo "Starting user service on port 50052..."
 	./$(USER_BINARY)
+
+run-post: build-post
+	@echo "Starting post service on port 50053..."
+	./$(POST_BINARY)
 
 run-gateway: build-gateway
 	@echo "Starting gateway on port 8080..."

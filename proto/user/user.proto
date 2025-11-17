@@ -42,6 +42,8 @@ message UserProfile {
     bool is_active = 9;
     google.protobuf.Timestamp created_at = 10;
     google.protobuf.Timestamp updated_at = 11;
+    int32 followers_count = 12;
+    int32 following_count = 13;
 }
 
 // User profile completion request
@@ -145,6 +147,14 @@ message ListUsersResponse {
     int32 limit = 6;
 }
 
+message FollowerCountRequest {
+    string user_id = 1;
+}
+
+message UserCountUpdateResponse {
+    bool success = 1;
+    string message = 2;
+}
 // User service definition
 service UserService {
     // Profile management
@@ -160,4 +170,9 @@ service UserService {
     
     // Admin methods
     rpc ListUsers(ListUsersRequest) returns (ListUsersResponse);
+    rpc IncrementFollowerCount(FollowerCountRequest) returns (UserCountUpdateResponse);
+    rpc DecrementFollowerCount(FollowerCountRequest) returns (UserCountUpdateResponse);
+
+    rpc IncrementFollowingCount(FollowerCountRequest) returns (UserCountUpdateResponse);
+    rpc DecrementFollowingCount(FollowerCountRequest) returns (UserCountUpdateResponse);
 }

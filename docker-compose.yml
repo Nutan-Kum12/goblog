@@ -91,6 +91,46 @@ services:
       - goblog_network
     restart: unless-stopped
 
+  # Post Service
+  post-service:
+    build:
+      context: .
+      dockerfile: services/post/Dockerfile
+    container_name: goblog_post
+    env_file:
+      - .env
+    environment:
+      # Server Configuration
+      - HOST=0.0.0.0
+      - POST_SERVICE_PORT=${POST_SERVICE_PORT:-50053}
+      
+      # Database Configuration (Use MongoDB Atlas)
+      - MONGO_URI=${MONGO_URI}
+      - DATABASE_NAME=${DATABASE_NAME:-goblog}
+      
+      # Development Configuration
+      - ENVIRONMENT=${ENVIRONMENT:-development}
+      - LOG_LEVEL=${LOG_LEVEL:-debug}
+      
+      # Rate Limiting
+      - RATE_LIMIT_RPS=${RATE_LIMIT_RPS:-10}
+      
+      # Inter-service Communication (Docker network)
+      - AUTH_SERVICE_URL=auth-service:50051
+      - USER_SERVICE_URL=user-service:50052
+      
+      # Post Service Specific
+      - MAX_POSTS_PER_PAGE=${MAX_POSTS_PER_PAGE:-100}
+      - MAX_IMAGE_SIZE=${MAX_IMAGE_SIZE:-5242880}  # 5MB in bytes
+    ports:
+      - "${POST_SERVICE_PORT:-50053}:${POST_SERVICE_PORT:-50053}"
+    depends_on:
+      - auth-service
+      - user-service
+    networks:
+      - goblog_network
+    restart: unless-stopped
+
   # Gateway Service
   gateway-service:
     build:
@@ -119,11 +159,13 @@ services:
       # Inter-service Communication (Docker network)
       - AUTH_SERVICE_URL=auth-service:50051
       - USER_SERVICE_URL=user-service:50052
+      - POST_SERVICE_URL=post-service:50053
     ports:
       - "${GATEWAY_PORT:-8080}:${GATEWAY_PORT:-8080}"
     depends_on:
       - auth-service
       - user-service
+      - post-service
     networks:
       - goblog_network
     restart: unless-stopped
