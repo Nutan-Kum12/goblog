@@ -1,0 +1,112 @@
+syntax = "proto3";
+
+package follow;
+option go_package = "github.com/Nutan-Kum12/goblog/proto/follow";
+
+import "google/protobuf/timestamp.proto";
+
+// Follow service definition
+service FollowService {
+    // Follow a user
+    rpc FollowUser(FollowUserRequest) returns (FollowUserResponse);
+    
+    // Unfollow a user
+    rpc UnfollowUser(UnfollowUserRequest) returns (UnfollowUserResponse);
+    
+    // Get list of followers for a user
+    rpc GetFollowers(GetFollowersRequest) returns (GetFollowersResponse);
+    
+    // Get list of users that a user is following
+    rpc GetFollowing(GetFollowingRequest) returns (GetFollowingResponse);
+    
+    // Check if user A is following user B
+    rpc IsFollowing(IsFollowingRequest) returns (IsFollowingResponse);
+    
+    // Get follower/following counts
+    rpc GetFollowCounts(GetFollowCountsRequest) returns (GetFollowCountsResponse);
+}
+
+// Follow relationship message
+message Follow {
+    string follower_id = 1;      // User who is following
+    string followee_id = 2;      // User being followed
+    google.protobuf.Timestamp followed_at = 3;  // When the follow happened
+}
+
+// Follow user request
+message FollowUserRequest {
+    string follower_id = 1;      // User who wants to follow
+    string followee_id = 2;      // User to be followed
+}
+
+message FollowUserResponse {
+    bool success = 1;
+    string message = 2;
+}
+
+// Unfollow user request
+message UnfollowUserRequest {
+    string follower_id = 1;      // User who wants to unfollow
+    string followee_id = 2;      // User to be unfollowed
+}
+
+message UnfollowUserResponse {
+    bool success = 1;
+    string message = 2;
+}
+
+// Get followers request
+message GetFollowersRequest {
+    string user_id = 1;          // User whose followers to get
+    int32 page = 2;              // Page number for pagination
+    int32 limit = 3;             // Number of items per page
+}
+
+message GetFollowersResponse {
+    bool success = 1;
+    string message = 2;
+    repeated string follower_ids = 3;
+    int32 total_count = 4;
+    int32 page = 5;
+    int32 limit = 6;
+}
+
+// Get following request
+message GetFollowingRequest {
+    string user_id = 1;          // User whose following list to get
+    int32 page = 2;              // Page number for pagination
+    int32 limit = 3;             // Number of items per page
+}
+
+message GetFollowingResponse {
+    bool success = 1;
+    string message = 2;
+    repeated string following_ids = 3;
+    int32 total_count = 4;
+    int32 page = 5;
+    int32 limit = 6;
+}
+
+// Check if following request
+message IsFollowingRequest {
+    string follower_id = 1;      // User who might be following
+    string followee_id = 2;      // User who might be followed
+}
+
+message IsFollowingResponse {
+    bool success = 1;
+    string message = 2;
+    bool is_following = 3;
+}
+
+// Get follow counts request
+message GetFollowCountsRequest {
+    string user_id = 1;
+}
+
+message GetFollowCountsResponse {
+    bool success = 1;
+    string message = 2;
+    int32 followers_count = 3;
+    int32 following_count = 4;
+}

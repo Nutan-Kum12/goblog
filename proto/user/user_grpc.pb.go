@@ -27,6 +27,10 @@ const (
 	UserService_GetUserById_FullMethodName              = "/user.UserService/GetUserById"
 	UserService_UpdateVerificationStatus_FullMethodName = "/user.UserService/UpdateVerificationStatus"
 	UserService_ListUsers_FullMethodName                = "/user.UserService/ListUsers"
+	UserService_IncrementFollowerCount_FullMethodName   = "/user.UserService/IncrementFollowerCount"
+	UserService_DecrementFollowerCount_FullMethodName   = "/user.UserService/DecrementFollowerCount"
+	UserService_IncrementFollowingCount_FullMethodName  = "/user.UserService/IncrementFollowingCount"
+	UserService_DecrementFollowingCount_FullMethodName  = "/user.UserService/DecrementFollowingCount"
 )
 
 // UserServiceClient is the client API for UserService service.
@@ -46,6 +50,10 @@ type UserServiceClient interface {
 	UpdateVerificationStatus(ctx context.Context, in *UpdateVerificationStatusRequest, opts ...grpc.CallOption) (*UpdateVerificationStatusResponse, error)
 	// Admin methods
 	ListUsers(ctx context.Context, in *ListUsersRequest, opts ...grpc.CallOption) (*ListUsersResponse, error)
+	IncrementFollowerCount(ctx context.Context, in *FollowerCountRequest, opts ...grpc.CallOption) (*UserCountUpdateResponse, error)
+	DecrementFollowerCount(ctx context.Context, in *FollowerCountRequest, opts ...grpc.CallOption) (*UserCountUpdateResponse, error)
+	IncrementFollowingCount(ctx context.Context, in *FollowerCountRequest, opts ...grpc.CallOption) (*UserCountUpdateResponse, error)
+	DecrementFollowingCount(ctx context.Context, in *FollowerCountRequest, opts ...grpc.CallOption) (*UserCountUpdateResponse, error)
 }
 
 type userServiceClient struct {
@@ -136,6 +144,46 @@ func (c *userServiceClient) ListUsers(ctx context.Context, in *ListUsersRequest,
 	return out, nil
 }
 
+func (c *userServiceClient) IncrementFollowerCount(ctx context.Context, in *FollowerCountRequest, opts ...grpc.CallOption) (*UserCountUpdateResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UserCountUpdateResponse)
+	err := c.cc.Invoke(ctx, UserService_IncrementFollowerCount_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) DecrementFollowerCount(ctx context.Context, in *FollowerCountRequest, opts ...grpc.CallOption) (*UserCountUpdateResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UserCountUpdateResponse)
+	err := c.cc.Invoke(ctx, UserService_DecrementFollowerCount_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) IncrementFollowingCount(ctx context.Context, in *FollowerCountRequest, opts ...grpc.CallOption) (*UserCountUpdateResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UserCountUpdateResponse)
+	err := c.cc.Invoke(ctx, UserService_IncrementFollowingCount_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userServiceClient) DecrementFollowingCount(ctx context.Context, in *FollowerCountRequest, opts ...grpc.CallOption) (*UserCountUpdateResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UserCountUpdateResponse)
+	err := c.cc.Invoke(ctx, UserService_DecrementFollowingCount_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServiceServer is the server API for UserService service.
 // All implementations must embed UnimplementedUserServiceServer
 // for forward compatibility.
@@ -153,6 +201,10 @@ type UserServiceServer interface {
 	UpdateVerificationStatus(context.Context, *UpdateVerificationStatusRequest) (*UpdateVerificationStatusResponse, error)
 	// Admin methods
 	ListUsers(context.Context, *ListUsersRequest) (*ListUsersResponse, error)
+	IncrementFollowerCount(context.Context, *FollowerCountRequest) (*UserCountUpdateResponse, error)
+	DecrementFollowerCount(context.Context, *FollowerCountRequest) (*UserCountUpdateResponse, error)
+	IncrementFollowingCount(context.Context, *FollowerCountRequest) (*UserCountUpdateResponse, error)
+	DecrementFollowingCount(context.Context, *FollowerCountRequest) (*UserCountUpdateResponse, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -186,6 +238,18 @@ func (UnimplementedUserServiceServer) UpdateVerificationStatus(context.Context, 
 }
 func (UnimplementedUserServiceServer) ListUsers(context.Context, *ListUsersRequest) (*ListUsersResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListUsers not implemented")
+}
+func (UnimplementedUserServiceServer) IncrementFollowerCount(context.Context, *FollowerCountRequest) (*UserCountUpdateResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method IncrementFollowerCount not implemented")
+}
+func (UnimplementedUserServiceServer) DecrementFollowerCount(context.Context, *FollowerCountRequest) (*UserCountUpdateResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DecrementFollowerCount not implemented")
+}
+func (UnimplementedUserServiceServer) IncrementFollowingCount(context.Context, *FollowerCountRequest) (*UserCountUpdateResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method IncrementFollowingCount not implemented")
+}
+func (UnimplementedUserServiceServer) DecrementFollowingCount(context.Context, *FollowerCountRequest) (*UserCountUpdateResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DecrementFollowingCount not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
 func (UnimplementedUserServiceServer) testEmbeddedByValue()                     {}
@@ -352,6 +416,78 @@ func _UserService_ListUsers_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_IncrementFollowerCount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FollowerCountRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).IncrementFollowerCount(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_IncrementFollowerCount_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).IncrementFollowerCount(ctx, req.(*FollowerCountRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_DecrementFollowerCount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FollowerCountRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).DecrementFollowerCount(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_DecrementFollowerCount_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).DecrementFollowerCount(ctx, req.(*FollowerCountRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_IncrementFollowingCount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FollowerCountRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).IncrementFollowingCount(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_IncrementFollowingCount_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).IncrementFollowingCount(ctx, req.(*FollowerCountRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserService_DecrementFollowingCount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FollowerCountRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).DecrementFollowingCount(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_DecrementFollowingCount_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).DecrementFollowingCount(ctx, req.(*FollowerCountRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UserService_ServiceDesc is the grpc.ServiceDesc for UserService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -390,6 +526,22 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListUsers",
 			Handler:    _UserService_ListUsers_Handler,
+		},
+		{
+			MethodName: "IncrementFollowerCount",
+			Handler:    _UserService_IncrementFollowerCount_Handler,
+		},
+		{
+			MethodName: "DecrementFollowerCount",
+			Handler:    _UserService_DecrementFollowerCount_Handler,
+		},
+		{
+			MethodName: "IncrementFollowingCount",
+			Handler:    _UserService_IncrementFollowingCount_Handler,
+		},
+		{
+			MethodName: "DecrementFollowingCount",
+			Handler:    _UserService_DecrementFollowingCount_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

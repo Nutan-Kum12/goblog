@@ -12,12 +12,14 @@ GOMOD=$(GOCMD) mod
 AUTH_BINARY=auth
 USER_BINARY=user
 POST_BINARY=post
+FOLLOW_BINARY=follow
 GATEWAY_BINARY=gateway
 
 # Directories
 AUTH_DIR=./services/auth
 USER_DIR=./services/user
 POST_DIR=./services/post
+FOLLOW_DIR=./services/follow
 GATEWAY_DIR=./gateway
 PROTO_DIR=./proto
 
@@ -76,11 +78,15 @@ gen:
 	@echo "Generating post protobuf..."
 	$(PROTOC) --go_out=. --go_opt=paths=source_relative \
 		--go-grpc_out=. --go-grpc_opt=paths=source_relative \
-		$(PROTO_DIR)/post/post.proto	
+		$(PROTO_DIR)/post/post.proto
+	@echo "Generating follow protobuf..."
+	$(PROTOC) --go_out=. --go_opt=paths=source_relative \
+		--go-grpc_out=. --go-grpc_opt=paths=source_relative \
+		$(PROTO_DIR)/follow/follow.proto	
 	@echo "Protobuf generation completed!"		
 
 # Build all services
-build: build-auth build-user build-post build-gateway
+build: build-auth build-user build-post build-follow build-gateway
 
 build-auth:
 	@echo "Building auth service..."
@@ -93,6 +99,10 @@ build-user:
 build-post:
 	@echo "Building post service..."
 	$(GOBUILD) -o $(POST_BINARY) $(POST_DIR)
+
+build-follow:
+	@echo "Building follow service..."
+	$(GOBUILD) -o $(FOLLOW_BINARY) $(FOLLOW_DIR)
 
 build-gateway:
 	@echo "Building gateway service..."
@@ -107,8 +117,8 @@ test:
 clean:
 	@echo "Cleaning..."
 	$(GOCLEAN)
-	rm -f $(AUTH_BINARY) $(USER_BINARY) $(POST_BINARY) $(GATEWAY_BINARY)
-	rm -f $(AUTH_BINARY).exe $(USER_BINARY).exe $(POST_BINARY).exe $(GATEWAY_BINARY).exe
+	rm -f $(AUTH_BINARY) $(USER_BINARY) $(POST_BINARY) $(FOLLOW_BINARY) $(GATEWAY_BINARY)
+	rm -f $(AUTH_BINARY).exe $(USER_BINARY).exe $(POST_BINARY).exe $(FOLLOW_BINARY).exe $(GATEWAY_BINARY).exe
 
 # Run individual services
 run-auth: build-auth
@@ -123,6 +133,10 @@ run-post: build-post
 	@echo "Starting post service on port 50053..."
 	./$(POST_BINARY)
 
+run-follow: build-follow
+	@echo "Starting follow service on port 50054..."
+	./$(FOLLOW_BINARY)
+
 run-gateway: build-gateway
 	@echo "Starting gateway on port 8080..."
 	./$(GATEWAY_BINARY)
@@ -136,6 +150,12 @@ run-all: build
 	@echo "User Service starting on :50052"
 	@powershell -Command "Start-Process -FilePath '$(CURDIR)/user.exe' -WindowStyle Normal"
 	@powershell -Command "Start-Sleep -Seconds 3"
+	@echo "Post Service starting on :50053"
+	@powershell -Command "Start-Process -FilePath '$(CURDIR)/post.exe' -WindowStyle Normal"
+	@powershell -Command "Start-Sleep -Seconds 3"
+	@echo "Follow Service starting on :50054"
+	@powershell -Command "Start-Process -FilePath '$(CURDIR)/follow.exe' -WindowStyle Normal"
+	@powershell -Command "Start-Sleep -Seconds 3"
 	@echo "Gateway starting on :8080"
 	@powershell -Command "Start-Process -FilePath '$(CURDIR)/gateway.exe' -WindowStyle Normal"
 	@echo "All services started! Gateway available at http://localhost:8080"
@@ -148,6 +168,10 @@ run-all-bg: build
 	@powershell -Command "Start-Sleep -Seconds 3"
 	@powershell -Command "Start-Process -FilePath '$(CURDIR)/user.exe' -WindowStyle Minimized"
 	@powershell -Command "Start-Sleep -Seconds 3"
+	@powershell -Command "Start-Process -FilePath '$(CURDIR)/post.exe' -WindowStyle Minimized"
+	@powershell -Command "Start-Sleep -Seconds 3"
+	@powershell -Command "Start-Process -FilePath '$(CURDIR)/follow.exe' -WindowStyle Minimized"
+	@powershell -Command "Start-Sleep -Seconds 3"
 	@powershell -Command "Start-Process -FilePath '$(CURDIR)/gateway.exe' -WindowStyle Minimized"
 	@echo "All services running in background. Gateway at http://localhost:8080"
 	@echo "Use 'make stop-all' to stop all services."
@@ -156,7 +180,9 @@ run-all-bg: build
 stop-all:
 	@echo "Stopping all services..."
 	@powershell -Command "Get-Process -Name 'auth' -ErrorAction SilentlyContinue | Stop-Process -Force"
-	@powershell -Command "Get-Process -Name 'user' -ErrorAction SilentlyContinue | Stop-Process -Force"  
+	@powershell -Command "Get-Process -Name 'user' -ErrorAction SilentlyContinue | Stop-Process -Force"
+	@powershell -Command "Get-Process -Name 'post' -ErrorAction SilentlyContinue | Stop-Process -Force"
+	@powershell -Command "Get-Process -Name 'follow' -ErrorAction SilentlyContinue | Stop-Process -Force"
 	@powershell -Command "Get-Process -Name 'gateway' -ErrorAction SilentlyContinue | Stop-Process -Force"
 	@echo "All services stopped"
 

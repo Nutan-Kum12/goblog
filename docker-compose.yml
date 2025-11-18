@@ -131,6 +131,45 @@ services:
       - goblog_network
     restart: unless-stopped
 
+  # Follow Service
+  follow-service:
+    build:
+      context: .
+      dockerfile: services/follow/Dockerfile
+    container_name: goblog_follow
+    env_file:
+      - .env
+    environment:
+      # Server Configuration
+      - HOST=0.0.0.0
+      - FOLLOW_SERVICE_PORT=${FOLLOW_SERVICE_PORT:-50054}
+      
+      # Database Configuration (Use MongoDB Atlas)
+      - MONGO_URI=${MONGO_URI}
+      - DATABASE_NAME=${DATABASE_NAME:-goblog}
+      
+      # Development Configuration
+      - ENVIRONMENT=${ENVIRONMENT:-development}
+      - LOG_LEVEL=${LOG_LEVEL:-debug}
+      
+      # Rate Limiting
+      - RATE_LIMIT_RPS=${RATE_LIMIT_RPS:-10}
+      
+      # Inter-service Communication (Docker network)
+      - AUTH_SERVICE_URL=auth-service:50051
+      - USER_SERVICE_URL=user-service:50052
+      
+      # Follow Service Specific
+      - MAX_FOLLOWS_PER_PAGE=${MAX_FOLLOWS_PER_PAGE:-100}
+    ports:
+      - "${FOLLOW_SERVICE_PORT:-50054}:${FOLLOW_SERVICE_PORT:-50054}"
+    depends_on:
+      - auth-service
+      - user-service
+    networks:
+      - goblog_network
+    restart: unless-stopped
+
   # Gateway Service
   gateway-service:
     build:
@@ -160,12 +199,14 @@ services:
       - AUTH_SERVICE_URL=auth-service:50051
       - USER_SERVICE_URL=user-service:50052
       - POST_SERVICE_URL=post-service:50053
+      - FOLLOW_SERVICE_URL=follow-service:50054
     ports:
       - "${GATEWAY_PORT:-8080}:${GATEWAY_PORT:-8080}"
     depends_on:
       - auth-service
       - user-service
       - post-service
+      - follow-service
     networks:
       - goblog_network
     restart: unless-stopped

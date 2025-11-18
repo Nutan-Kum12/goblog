@@ -122,20 +122,22 @@ func (InterestCategory) EnumDescriptor() ([]byte, []int) {
 
 // User profile message
 type UserProfile struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	Email         string                 `protobuf:"bytes,2,opt,name=email,proto3" json:"email,omitempty"`
-	FirstName     string                 `protobuf:"bytes,3,opt,name=first_name,json=firstName,proto3" json:"first_name,omitempty"`
-	LastName      string                 `protobuf:"bytes,4,opt,name=last_name,json=lastName,proto3" json:"last_name,omitempty"`
-	PhoneNumber   string                 `protobuf:"bytes,5,opt,name=phone_number,json=phoneNumber,proto3" json:"phone_number,omitempty"`
-	DateOfBirth   *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=date_of_birth,json=dateOfBirth,proto3" json:"date_of_birth,omitempty"`
-	Interests     []InterestCategory     `protobuf:"varint,7,rep,packed,name=interests,proto3,enum=user.InterestCategory" json:"interests,omitempty"`
-	IsVerified    bool                   `protobuf:"varint,8,opt,name=is_verified,json=isVerified,proto3" json:"is_verified,omitempty"`
-	IsActive      bool                   `protobuf:"varint,9,opt,name=is_active,json=isActive,proto3" json:"is_active,omitempty"`
-	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,10,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
-	UpdatedAt     *timestamppb.Timestamp `protobuf:"bytes,11,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	UserId         string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	Email          string                 `protobuf:"bytes,2,opt,name=email,proto3" json:"email,omitempty"`
+	FirstName      string                 `protobuf:"bytes,3,opt,name=first_name,json=firstName,proto3" json:"first_name,omitempty"`
+	LastName       string                 `protobuf:"bytes,4,opt,name=last_name,json=lastName,proto3" json:"last_name,omitempty"`
+	PhoneNumber    string                 `protobuf:"bytes,5,opt,name=phone_number,json=phoneNumber,proto3" json:"phone_number,omitempty"`
+	DateOfBirth    *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=date_of_birth,json=dateOfBirth,proto3" json:"date_of_birth,omitempty"`
+	Interests      []InterestCategory     `protobuf:"varint,7,rep,packed,name=interests,proto3,enum=user.InterestCategory" json:"interests,omitempty"`
+	IsVerified     bool                   `protobuf:"varint,8,opt,name=is_verified,json=isVerified,proto3" json:"is_verified,omitempty"`
+	IsActive       bool                   `protobuf:"varint,9,opt,name=is_active,json=isActive,proto3" json:"is_active,omitempty"`
+	CreatedAt      *timestamppb.Timestamp `protobuf:"bytes,10,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	UpdatedAt      *timestamppb.Timestamp `protobuf:"bytes,11,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	FollowersCount int32                  `protobuf:"varint,12,opt,name=followers_count,json=followersCount,proto3" json:"followers_count,omitempty"`
+	FollowingCount int32                  `protobuf:"varint,13,opt,name=following_count,json=followingCount,proto3" json:"following_count,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
 }
 
 func (x *UserProfile) Reset() {
@@ -243,6 +245,20 @@ func (x *UserProfile) GetUpdatedAt() *timestamppb.Timestamp {
 		return x.UpdatedAt
 	}
 	return nil
+}
+
+func (x *UserProfile) GetFollowersCount() int32 {
+	if x != nil {
+		return x.FollowersCount
+	}
+	return 0
+}
+
+func (x *UserProfile) GetFollowingCount() int32 {
+	if x != nil {
+		return x.FollowingCount
+	}
+	return 0
 }
 
 // User profile completion request
@@ -1189,11 +1205,107 @@ func (x *ListUsersResponse) GetLimit() int32 {
 	return 0
 }
 
+type FollowerCountRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *FollowerCountRequest) Reset() {
+	*x = FollowerCountRequest{}
+	mi := &file_proto_user_user_proto_msgTypes[17]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *FollowerCountRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*FollowerCountRequest) ProtoMessage() {}
+
+func (x *FollowerCountRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_user_user_proto_msgTypes[17]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use FollowerCountRequest.ProtoReflect.Descriptor instead.
+func (*FollowerCountRequest) Descriptor() ([]byte, []int) {
+	return file_proto_user_user_proto_rawDescGZIP(), []int{17}
+}
+
+func (x *FollowerCountRequest) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
+type UserCountUpdateResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
+	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UserCountUpdateResponse) Reset() {
+	*x = UserCountUpdateResponse{}
+	mi := &file_proto_user_user_proto_msgTypes[18]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UserCountUpdateResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UserCountUpdateResponse) ProtoMessage() {}
+
+func (x *UserCountUpdateResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_user_user_proto_msgTypes[18]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UserCountUpdateResponse.ProtoReflect.Descriptor instead.
+func (*UserCountUpdateResponse) Descriptor() ([]byte, []int) {
+	return file_proto_user_user_proto_rawDescGZIP(), []int{18}
+}
+
+func (x *UserCountUpdateResponse) GetSuccess() bool {
+	if x != nil {
+		return x.Success
+	}
+	return false
+}
+
+func (x *UserCountUpdateResponse) GetMessage() string {
+	if x != nil {
+		return x.Message
+	}
+	return ""
+}
+
 var File_proto_user_user_proto protoreflect.FileDescriptor
 
 const file_proto_user_user_proto_rawDesc = "" +
 	"\n" +
-	"\x15proto/user/user.proto\x12\x04user\x1a\x1fgoogle/protobuf/timestamp.proto\"\xc5\x03\n" +
+	"\x15proto/user/user.proto\x12\x04user\x1a\x1fgoogle/protobuf/timestamp.proto\"\x97\x04\n" +
 	"\vUserProfile\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x14\n" +
 	"\x05email\x18\x02 \x01(\tR\x05email\x12\x1d\n" +
@@ -1210,7 +1322,9 @@ const file_proto_user_user_proto_rawDesc = "" +
 	"created_at\x18\n" +
 	" \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
 	"\n" +
-	"updated_at\x18\v \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\"\x86\x02\n" +
+	"updated_at\x18\v \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\x12'\n" +
+	"\x0ffollowers_count\x18\f \x01(\x05R\x0efollowersCount\x12'\n" +
+	"\x0ffollowing_count\x18\r \x01(\x05R\x0efollowingCount\"\x86\x02\n" +
 	"\x16CompleteProfileRequest\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x1d\n" +
 	"\n" +
@@ -1275,7 +1389,12 @@ const file_proto_user_user_proto_rawDesc = "" +
 	"\vtotal_count\x18\x04 \x01(\x05R\n" +
 	"totalCount\x12\x12\n" +
 	"\x04page\x18\x05 \x01(\x05R\x04page\x12\x14\n" +
-	"\x05limit\x18\x06 \x01(\x05R\x05limit*\x99\x02\n" +
+	"\x05limit\x18\x06 \x01(\x05R\x05limit\"/\n" +
+	"\x14FollowerCountRequest\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\"M\n" +
+	"\x17UserCountUpdateResponse\x12\x18\n" +
+	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x18\n" +
+	"\amessage\x18\x02 \x01(\tR\amessage*\x99\x02\n" +
 	"\x10InterestCategory\x12\x18\n" +
 	"\x14INTEREST_UNSPECIFIED\x10\x00\x12\n" +
 	"\n" +
@@ -1302,7 +1421,7 @@ const file_proto_user_user_proto_rawDesc = "" +
 	"\x06MOVIES\x10\x0f\x12\t\n" +
 	"\x05BOOKS\x10\x10\x12\a\n" +
 	"\x03ART\x10\x11\x12\x0f\n" +
-	"\vPHOTOGRAPHY\x10\x122\xfb\x04\n" +
+	"\vPHOTOGRAPHY\x10\x122\xd1\a\n" +
 	"\vUserService\x12N\n" +
 	"\x0fCompleteProfile\x12\x1c.user.CompleteProfileRequest\x1a\x1d.user.CompleteProfileResponse\x12K\n" +
 	"\x0eGetUserProfile\x12\x1b.user.GetUserProfileRequest\x1a\x1c.user.GetUserProfileResponse\x12T\n" +
@@ -1312,7 +1431,11 @@ const file_proto_user_user_proto_rawDesc = "" +
 	"\x0eGetUserByEmail\x12\x1b.user.GetUserByEmailRequest\x1a\x1c.user.GetUserByEmailResponse\x12B\n" +
 	"\vGetUserById\x12\x18.user.GetUserByIdRequest\x1a\x19.user.GetUserByIdResponse\x12i\n" +
 	"\x18UpdateVerificationStatus\x12%.user.UpdateVerificationStatusRequest\x1a&.user.UpdateVerificationStatusResponse\x12<\n" +
-	"\tListUsers\x12\x16.user.ListUsersRequest\x1a\x17.user.ListUsersResponseB*Z(github.com/Nutan-Kum12/goblog/proto/userb\x06proto3"
+	"\tListUsers\x12\x16.user.ListUsersRequest\x1a\x17.user.ListUsersResponse\x12S\n" +
+	"\x16IncrementFollowerCount\x12\x1a.user.FollowerCountRequest\x1a\x1d.user.UserCountUpdateResponse\x12S\n" +
+	"\x16DecrementFollowerCount\x12\x1a.user.FollowerCountRequest\x1a\x1d.user.UserCountUpdateResponse\x12T\n" +
+	"\x17IncrementFollowingCount\x12\x1a.user.FollowerCountRequest\x1a\x1d.user.UserCountUpdateResponse\x12T\n" +
+	"\x17DecrementFollowingCount\x12\x1a.user.FollowerCountRequest\x1a\x1d.user.UserCountUpdateResponseB*Z(github.com/Nutan-Kum12/goblog/proto/userb\x06proto3"
 
 var (
 	file_proto_user_user_proto_rawDescOnce sync.Once
@@ -1327,7 +1450,7 @@ func file_proto_user_user_proto_rawDescGZIP() []byte {
 }
 
 var file_proto_user_user_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-var file_proto_user_user_proto_msgTypes = make([]protoimpl.MessageInfo, 17)
+var file_proto_user_user_proto_msgTypes = make([]protoimpl.MessageInfo, 19)
 var file_proto_user_user_proto_goTypes = []any{
 	(InterestCategory)(0),                    // 0: user.InterestCategory
 	(*UserProfile)(nil),                      // 1: user.UserProfile
@@ -1347,17 +1470,19 @@ var file_proto_user_user_proto_goTypes = []any{
 	(*DeleteUserResponse)(nil),               // 15: user.DeleteUserResponse
 	(*ListUsersRequest)(nil),                 // 16: user.ListUsersRequest
 	(*ListUsersResponse)(nil),                // 17: user.ListUsersResponse
-	(*timestamppb.Timestamp)(nil),            // 18: google.protobuf.Timestamp
+	(*FollowerCountRequest)(nil),             // 18: user.FollowerCountRequest
+	(*UserCountUpdateResponse)(nil),          // 19: user.UserCountUpdateResponse
+	(*timestamppb.Timestamp)(nil),            // 20: google.protobuf.Timestamp
 }
 var file_proto_user_user_proto_depIdxs = []int32{
-	18, // 0: user.UserProfile.date_of_birth:type_name -> google.protobuf.Timestamp
+	20, // 0: user.UserProfile.date_of_birth:type_name -> google.protobuf.Timestamp
 	0,  // 1: user.UserProfile.interests:type_name -> user.InterestCategory
-	18, // 2: user.UserProfile.created_at:type_name -> google.protobuf.Timestamp
-	18, // 3: user.UserProfile.updated_at:type_name -> google.protobuf.Timestamp
-	18, // 4: user.CompleteProfileRequest.date_of_birth:type_name -> google.protobuf.Timestamp
+	20, // 2: user.UserProfile.created_at:type_name -> google.protobuf.Timestamp
+	20, // 3: user.UserProfile.updated_at:type_name -> google.protobuf.Timestamp
+	20, // 4: user.CompleteProfileRequest.date_of_birth:type_name -> google.protobuf.Timestamp
 	0,  // 5: user.CompleteProfileRequest.interests:type_name -> user.InterestCategory
 	1,  // 6: user.GetUserProfileResponse.user_profile:type_name -> user.UserProfile
-	18, // 7: user.UpdateUserProfileRequest.date_of_birth:type_name -> google.protobuf.Timestamp
+	20, // 7: user.UpdateUserProfileRequest.date_of_birth:type_name -> google.protobuf.Timestamp
 	0,  // 8: user.UpdateUserProfileRequest.interests:type_name -> user.InterestCategory
 	1,  // 9: user.GetUserByEmailResponse.user_profile:type_name -> user.UserProfile
 	1,  // 10: user.GetUserByIdResponse.user_profile:type_name -> user.UserProfile
@@ -1370,16 +1495,24 @@ var file_proto_user_user_proto_depIdxs = []int32{
 	10, // 17: user.UserService.GetUserById:input_type -> user.GetUserByIdRequest
 	12, // 18: user.UserService.UpdateVerificationStatus:input_type -> user.UpdateVerificationStatusRequest
 	16, // 19: user.UserService.ListUsers:input_type -> user.ListUsersRequest
-	3,  // 20: user.UserService.CompleteProfile:output_type -> user.CompleteProfileResponse
-	5,  // 21: user.UserService.GetUserProfile:output_type -> user.GetUserProfileResponse
-	7,  // 22: user.UserService.UpdateUserProfile:output_type -> user.UpdateUserProfileResponse
-	15, // 23: user.UserService.DeleteUser:output_type -> user.DeleteUserResponse
-	9,  // 24: user.UserService.GetUserByEmail:output_type -> user.GetUserByEmailResponse
-	11, // 25: user.UserService.GetUserById:output_type -> user.GetUserByIdResponse
-	13, // 26: user.UserService.UpdateVerificationStatus:output_type -> user.UpdateVerificationStatusResponse
-	17, // 27: user.UserService.ListUsers:output_type -> user.ListUsersResponse
-	20, // [20:28] is the sub-list for method output_type
-	12, // [12:20] is the sub-list for method input_type
+	18, // 20: user.UserService.IncrementFollowerCount:input_type -> user.FollowerCountRequest
+	18, // 21: user.UserService.DecrementFollowerCount:input_type -> user.FollowerCountRequest
+	18, // 22: user.UserService.IncrementFollowingCount:input_type -> user.FollowerCountRequest
+	18, // 23: user.UserService.DecrementFollowingCount:input_type -> user.FollowerCountRequest
+	3,  // 24: user.UserService.CompleteProfile:output_type -> user.CompleteProfileResponse
+	5,  // 25: user.UserService.GetUserProfile:output_type -> user.GetUserProfileResponse
+	7,  // 26: user.UserService.UpdateUserProfile:output_type -> user.UpdateUserProfileResponse
+	15, // 27: user.UserService.DeleteUser:output_type -> user.DeleteUserResponse
+	9,  // 28: user.UserService.GetUserByEmail:output_type -> user.GetUserByEmailResponse
+	11, // 29: user.UserService.GetUserById:output_type -> user.GetUserByIdResponse
+	13, // 30: user.UserService.UpdateVerificationStatus:output_type -> user.UpdateVerificationStatusResponse
+	17, // 31: user.UserService.ListUsers:output_type -> user.ListUsersResponse
+	19, // 32: user.UserService.IncrementFollowerCount:output_type -> user.UserCountUpdateResponse
+	19, // 33: user.UserService.DecrementFollowerCount:output_type -> user.UserCountUpdateResponse
+	19, // 34: user.UserService.IncrementFollowingCount:output_type -> user.UserCountUpdateResponse
+	19, // 35: user.UserService.DecrementFollowingCount:output_type -> user.UserCountUpdateResponse
+	24, // [24:36] is the sub-list for method output_type
+	12, // [12:24] is the sub-list for method input_type
 	12, // [12:12] is the sub-list for extension type_name
 	12, // [12:12] is the sub-list for extension extendee
 	0,  // [0:12] is the sub-list for field type_name
@@ -1396,7 +1529,7 @@ func file_proto_user_user_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_user_user_proto_rawDesc), len(file_proto_user_user_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   17,
+			NumMessages:   19,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
