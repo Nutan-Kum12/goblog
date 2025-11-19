@@ -43,7 +43,7 @@ message Post {
     google.protobuf.Timestamp updated_at = 8;
     int32 like_count = 9;
     int32 comment_count = 10;
-    repeated string media_urls = 11;
+    repeated string file_paths = 11;
 }
 
 message Comment {
@@ -62,7 +62,7 @@ message CreatePostRequest {
     string title = 2;
     string content = 3;
     repeated string tags = 4;
-    repeated string media_urls = 5;
+    repeated string file_paths = 5;
 }
 
 message CreatePostResponse {
@@ -94,7 +94,7 @@ message UpdatePostRequest {
     repeated string tags = 4;
     bool is_published = 5;
     google.protobuf.Timestamp updated_at = 6;
-    repeated string media_urls = 7;
+    repeated string file_paths = 7;
 }
 
 message UpdatePostResponse {

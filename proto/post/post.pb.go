@@ -37,7 +37,7 @@ type Post struct {
 	UpdatedAt     *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
 	LikeCount     int32                  `protobuf:"varint,9,opt,name=like_count,json=likeCount,proto3" json:"like_count,omitempty"`
 	CommentCount  int32                  `protobuf:"varint,10,opt,name=comment_count,json=commentCount,proto3" json:"comment_count,omitempty"`
-	MediaUrls     []string               `protobuf:"bytes,11,rep,name=media_urls,json=mediaUrls,proto3" json:"media_urls,omitempty"`
+	FilePaths     []string               `protobuf:"bytes,11,rep,name=file_paths,json=filePaths,proto3" json:"file_paths,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -142,9 +142,9 @@ func (x *Post) GetCommentCount() int32 {
 	return 0
 }
 
-func (x *Post) GetMediaUrls() []string {
+func (x *Post) GetFilePaths() []string {
 	if x != nil {
-		return x.MediaUrls
+		return x.FilePaths
 	}
 	return nil
 }
@@ -234,7 +234,7 @@ type CreatePostRequest struct {
 	Title         string                 `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
 	Content       string                 `protobuf:"bytes,3,opt,name=content,proto3" json:"content,omitempty"`
 	Tags          []string               `protobuf:"bytes,4,rep,name=tags,proto3" json:"tags,omitempty"`
-	MediaUrls     []string               `protobuf:"bytes,5,rep,name=media_urls,json=mediaUrls,proto3" json:"media_urls,omitempty"`
+	FilePaths     []string               `protobuf:"bytes,5,rep,name=file_paths,json=filePaths,proto3" json:"file_paths,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -297,9 +297,9 @@ func (x *CreatePostRequest) GetTags() []string {
 	return nil
 }
 
-func (x *CreatePostRequest) GetMediaUrls() []string {
+func (x *CreatePostRequest) GetFilePaths() []string {
 	if x != nil {
-		return x.MediaUrls
+		return x.FilePaths
 	}
 	return nil
 }
@@ -482,7 +482,7 @@ type UpdatePostRequest struct {
 	Tags          []string               `protobuf:"bytes,4,rep,name=tags,proto3" json:"tags,omitempty"`
 	IsPublished   bool                   `protobuf:"varint,5,opt,name=is_published,json=isPublished,proto3" json:"is_published,omitempty"`
 	UpdatedAt     *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
-	MediaUrls     []string               `protobuf:"bytes,7,rep,name=media_urls,json=mediaUrls,proto3" json:"media_urls,omitempty"`
+	FilePaths     []string               `protobuf:"bytes,7,rep,name=file_paths,json=filePaths,proto3" json:"file_paths,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -559,9 +559,9 @@ func (x *UpdatePostRequest) GetUpdatedAt() *timestamppb.Timestamp {
 	return nil
 }
 
-func (x *UpdatePostRequest) GetMediaUrls() []string {
+func (x *UpdatePostRequest) GetFilePaths() []string {
 	if x != nil {
-		return x.MediaUrls
+		return x.FilePaths
 	}
 	return nil
 }
@@ -1646,7 +1646,7 @@ const file_proto_post_post_proto_rawDesc = "" +
 	"\rcomment_count\x18\n" +
 	" \x01(\x05R\fcommentCount\x12\x1d\n" +
 	"\n" +
-	"media_urls\x18\v \x03(\tR\tmediaUrls\"\xaf\x01\n" +
+	"file_paths\x18\v \x03(\tR\tfilePaths\"\xaf\x01\n" +
 	"\aComment\x12\x1d\n" +
 	"\n" +
 	"comment_id\x18\x01 \x01(\tR\tcommentId\x12\x17\n" +
@@ -1661,7 +1661,7 @@ const file_proto_post_post_proto_rawDesc = "" +
 	"\acontent\x18\x03 \x01(\tR\acontent\x12\x12\n" +
 	"\x04tags\x18\x04 \x03(\tR\x04tags\x12\x1d\n" +
 	"\n" +
-	"media_urls\x18\x05 \x03(\tR\tmediaUrls\"a\n" +
+	"file_paths\x18\x05 \x03(\tR\tfilePaths\"a\n" +
 	"\x12CreatePostResponse\x12\x18\n" +
 	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x18\n" +
 	"\amessage\x18\x02 \x01(\tR\amessage\x12\x17\n" +
@@ -1682,7 +1682,7 @@ const file_proto_post_post_proto_rawDesc = "" +
 	"\n" +
 	"updated_at\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\x12\x1d\n" +
 	"\n" +
-	"media_urls\x18\a \x03(\tR\tmediaUrls\"H\n" +
+	"file_paths\x18\a \x03(\tR\tfilePaths\"H\n" +
 	"\x12UpdatePostResponse\x12\x18\n" +
 	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x18\n" +
 	"\amessage\x18\x02 \x01(\tR\amessage\",\n" +
