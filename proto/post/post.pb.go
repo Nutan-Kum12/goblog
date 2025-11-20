@@ -722,9 +722,11 @@ func (x *DeletePostResponse) GetMessage() string {
 // ---------------------------
 type ListPostsRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"` // Optional: if provided, filter posts by specific user
 	PageNumber    int32                  `protobuf:"varint,2,opt,name=page_number,json=pageNumber,proto3" json:"page_number,omitempty"`
 	PageSize      int32                  `protobuf:"varint,3,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"`
+	Search        string                 `protobuf:"bytes,4,opt,name=search,proto3" json:"search,omitempty"`                            // Optional: search in title/content
+	PublicOnly    bool                   `protobuf:"varint,5,opt,name=public_only,json=publicOnly,proto3" json:"public_only,omitempty"` // If true, only return published posts (for public endpoint)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -778,6 +780,20 @@ func (x *ListPostsRequest) GetPageSize() int32 {
 		return x.PageSize
 	}
 	return 0
+}
+
+func (x *ListPostsRequest) GetSearch() string {
+	if x != nil {
+		return x.Search
+	}
+	return ""
+}
+
+func (x *ListPostsRequest) GetPublicOnly() bool {
+	if x != nil {
+		return x.PublicOnly
+	}
+	return false
 }
 
 type ListPostsResponse struct {
@@ -1690,12 +1706,15 @@ const file_proto_post_post_proto_rawDesc = "" +
 	"\apost_id\x18\x01 \x01(\tR\x06postId\"H\n" +
 	"\x12DeletePostResponse\x12\x18\n" +
 	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x18\n" +
-	"\amessage\x18\x02 \x01(\tR\amessage\"i\n" +
+	"\amessage\x18\x02 \x01(\tR\amessage\"\xa2\x01\n" +
 	"\x10ListPostsRequest\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x1f\n" +
 	"\vpage_number\x18\x02 \x01(\x05R\n" +
 	"pageNumber\x12\x1b\n" +
-	"\tpage_size\x18\x03 \x01(\x05R\bpageSize\"\x8a\x01\n" +
+	"\tpage_size\x18\x03 \x01(\x05R\bpageSize\x12\x16\n" +
+	"\x06search\x18\x04 \x01(\tR\x06search\x12\x1f\n" +
+	"\vpublic_only\x18\x05 \x01(\bR\n" +
+	"publicOnly\"\x8a\x01\n" +
 	"\x11ListPostsResponse\x12\x18\n" +
 	"\asuccess\x18\x01 \x01(\bR\asuccess\x12\x18\n" +
 	"\amessage\x18\x02 \x01(\tR\amessage\x12 \n" +

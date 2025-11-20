@@ -118,9 +118,11 @@ message DeletePostResponse {
 // List Posts
 // ---------------------------
 message ListPostsRequest {
-    string user_id = 1;
+    string user_id = 1;       // Optional: if provided, filter posts by specific user
     int32 page_number = 2;
     int32 page_size = 3;
+    string search = 4;        // Optional: search in title/content
+    bool public_only = 5;     // If true, only return published posts (for public endpoint)
 }
 
 message ListPostsResponse {
