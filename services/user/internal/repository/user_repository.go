@@ -6,12 +6,11 @@ import (
 	"log"
 	"time"
 
+	"github.com/Nutan-Kum12/goblog/services/user/internal/models"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-
-	"github.com/Nutan-Kum12/goblog/services/user/internal/models"
 )
 
 // UserRepository defines the interface for user database operations
@@ -162,7 +161,6 @@ func (r *MongoUserRepository) UpdateVerificationStatus(ctx context.Context, user
 			"updated_at":  time.Now(),
 		},
 	}
-
 	_, err := r.collection.UpdateOne(ctx, filter, update)
 	return err
 }
@@ -176,7 +174,6 @@ func (r *MongoUserRepository) UpdateUserEmail(ctx context.Context, userID string
 			"updated_at": time.Now(),
 		},
 	}
-
 	_, err := r.collection.UpdateOne(ctx, filter, update)
 	return err
 }
@@ -190,7 +187,6 @@ func (r *MongoUserRepository) DeleteUser(ctx context.Context, userID string) err
 			"updated_at": time.Now(),
 		},
 	}
-
 	_, err := r.collection.UpdateOne(ctx, filter, update)
 	return err
 }
